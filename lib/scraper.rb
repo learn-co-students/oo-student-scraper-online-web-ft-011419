@@ -16,21 +16,33 @@ data
   end
 
   def self.scrape_profile_page(profile_url)
-doc = Nokogiri::HTML(open(profile_url))
-file={}
-data=doc.css(".social-icon-container a")
-data.collect do|tag|
-t=tag.attribute("href").value
+      doc = Nokogiri::HTML(open(profile_url))
+      file={}
+      #this is the links css   (".social-icon-container a") .attribute("href").value
+      links=doc.css(".social-icon-container a").map{|data|data.attribute("href").value}
+      links.each do|tag|
 
+#binding.pry
+ # links are all the links
+#tag is each social media check for validty
+                if tag.include?("linkedin")
+                  file[:linkedin]= tag
+                elsif tag.include?("github")
+                    file[:github]= tag
+                  elsif tag.include?("twitter")
+                      file[:twitter]= tag
+                    else
+                        file[:blog]= tag
+                      end
 
-file[:linkedin]="t" unless t== nil
-  file [:github]="t" unless t== nil
-file  [:twitter]="t"  unless t== nil
-#:profile_quote=>"\"Forget safety. Live where you fear to live. Destroy your reputation. Be notorious.\" - Rumi",
-#     :bio=> "I'm a school"
+          end
+        #  binding.pry
+          file[:profile_quote] =doc.css(".profile-quote").text if doc.css(".profile-quote") #quote
+          file[:bio] =doc.css(".description-holder p").text if  doc.css(".description-holder")   #bio
 
+    # binding.pry
+    return  file
+      end
 
 end
-end
-
-end
+#text.gsub(/\s+/, " ")

@@ -14,14 +14,17 @@ class Student
 
   def self.create_from_collection(students_array)
 students_array.each do |student|
-  student.each do
-  binding.pry
+ #no need as this is done in the initialize method student.each do |key , value|
+Student.new (student)
   end
 end
 
   def add_student_attributes(attributes_hash)
-
+attributes_hash.each do |key, value |
+self.send(("#{key}="), value) # this is meta programing
+self
   end
+end
 
   def self.all
 @@all
